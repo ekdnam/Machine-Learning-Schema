@@ -1,0 +1,71 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Encoding categorical variables
+
+What is a categorical variable?
+In layman's terms, a quantity that is not a number but rather is a string or something of that sort is a categorical variable.
+
+
+Why do we need to encode the categorical variables?
+
+Usually in machine learning, the data fed to the model or the results calculated are numeric.
+
+
+For example, say we want to predict a crop for a farmer to grow. Let the inputs be ambient temperature, average rainfall and soil type (red, black, loamy, sandy) in his farm land. The output would be the name of a crop.
+
+A problem arises.
+
+Not all inputs are in numeric format. The soil types are of string type. Neither is the output numeric.
+
+Thus we have to encode this data to convert it into numerical values.
+
+
+
+```{r}
+# Importing dataset
+
+data = read.csv('Data.csv')
+
+print(data)
+```
+
+There are categorical variables, and also missing data.
+
+We will first handle the missing data.
+
+```{r}
+# We will fill these NA values by the mean of the columns
+
+data$Age = ifelse(is.na(data$Age),
+                ave(data$Age, FUN =  function(x) mean(x, na.rm = TRUE)),
+                data$Age)
+
+data$Salary = ifelse(is.na(data$Salary),
+                  ave(data$Salary, FUN =  function(x) mean(x, na.rm = TRUE)),
+                  data$Salary)
+
+print(data)
+```
+
+Now we encode the categorical variables, using the factor function.
+
+```{r}
+# factor(x = character(), levels, labels = levels, exclude = NA, ordered = is.ordered(x), nmax = NA)
+# params:
+# 1. x: a vector of data
+# 2. levels: optional vector of unique values that x might have taken
+# 3. labels: optional character vector of labels for levels (in same order as levels after removing those in exclude), or character string of length 1
+# 4. exclude: vector of values to be excluded when forming set of levels
+# 5. ordered: logical flag to determine if the levels should be regarded as ordered (in order given)
+# 6. nmax: an upper bound on number of levels
+
+data$Country = factor(data$Country,
+                      levels = c('France', 'Spain', 'Germany'),
+                      labels = c(0, 1, 2))
+
+print(data)
+```
+
+This method is known as label encoding. Thus we have implemented label encoding of categorical variables in R
