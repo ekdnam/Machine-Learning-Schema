@@ -1,0 +1,88 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+data = read.csv("housing.csv")
+```
+Getting required data fields, population and households from the data set
+
+```{r}
+population = data$population
+
+households = data$households
+```
+
+The linear regression is to be created using the lm() method
+
+
+The lm() function is as follows
+     lm(formula, data, subset, weights, na.action,
+     method = "qr", model = TRUE, x = FALSE, y = FALSE, qr = TRUE,
+     singular.ok = TRUE, contrasts = NULL, offset, …)
+
+    Parameters
+    1) formula is of the form response ~ cause
+
+    2) data is the dataframe from where the response and cause variables are going to be taken.
+    else from the environment
+
+    3) subset: optional vector specifying subset of observations to be used
+
+    4) na.action: function which specifies what to do if na values present
+
+    5) method: method to be used for fitting. currently only method = "qr"
+
+```{r}
+regressor = lm(formula = households ~ population)
+```
+
+predict function returns dataframe containing model predicitions
+  
+predict() has only one parameter, the object which used as prediction model
+  
+```{r}
+y_pred = predict(regressor)
+```
+
+Plotting the results
+
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_point(aes(x = population, y = households),
+             colour = 'red') +
+  geom_line(aes(x = population, y = predict(regressor, newdata = data)),
+            colour = 'blue') +
+  ggtitle('Income vs House Value') +
+  xlab('Median Income') +
+  ylab('Median House Value')
+
+```
+
+Saving the results
+
+```{r}
+ggsave(
+  filename = "predict.png",
+  plot = last_plot(),
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = NA,
+  height = NA,
+  units = c("in", "cm", "mm"),
+  dpi = 300,
+  limitsize = TRUE,
+  #...
+)
+
+```
+
+
+
